@@ -13,9 +13,8 @@ venv/
 env/
 .ipynb_checkpoints/
 
-# 数据与实验输出
+# 数据与实验输出（大文件不入库）
 data/
-results/
 outputs/
 logs/
 *.pkl
@@ -24,6 +23,11 @@ logs/
 *.h5
 *.csv
 *.npy
+
+# 实验缓存不入库；Code/results/ 下的结果表（*.md）要入库
+results/
+!Code/results/
+!Code/results/*.md
 
 # 编辑器
 .vscode/

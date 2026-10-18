@@ -11,9 +11,9 @@
 | 状态 | 数量 |
 |------|------|
 | ✅ 已复现 | 0 |
-| 🟡 部分复现 | 0 |
-| 🚧 进行中 | 1 |
-| 📝 计划中 | 0 |
+| 🟡 部分复现 | 1 |
+| 🚧 进行中 | 0 |
+| 📝 计划中 | 1 |
 
 **状态说明**
 
@@ -35,11 +35,24 @@
 
 ---
 
+## 🟡 部分复现
+
+| 论文 | 年份 | 领域 | 原文链接 | 官方代码 | 复现文件夹 | 结果（论文 / 复现） |
+|------|------|------|----------|----------|------------|---------------------|
+| Multi-objective evolutionary co-learning framework for energy-efficient hybrid flow-shop scheduling problem with human-machine collaboration（MOECLF） | 2025 | 调度优化 / 多目标进化 | [DOI](https://doi.org/10.1016/j.swevo.2025.101932) | 未找到，独立实现 | [MOECLF](./MOECLF) | 消融、控制器对比、算法对比已完成；**EP/MSI 与算法对比结论一致，VNS 与 PPO 未能复现** |
+
+> 说明：主算法与三组对照实验（`Np=200 / Ngen=1000`）已全部跑完，核心结论与论文部分一致、
+> 部分不符。差异分析与完整数据见 [MOECLF/Code/REPORT.md](./MOECLF/Code/REPORT.md)。
+
+---
+
 ## 🚧 进行中
 
 | 论文 | 年份 | 领域 | 原文链接 | 复现文件夹 | 当前进度 | 备注 |
 |------|------|------|----------|------------|----------|------|
-| Multi-objective evolutionary co-learning framework for energy-efficient hybrid flow-shop scheduling problem with human-machine collaboration（MOECLF） | 2025 | 调度优化 / 多目标进化 | [DOI](https://doi.org/10.1016/j.swevo.2025.101932) | [MOECLF](./MOECLF) | 精读笔记与框架梳理已完成，代码复现待开始 | Swarm and Evolutionary Computation, 95 (2025) 101932 |
+| — | — | — | — | — | — | — |
+
+> 暂无进行中的复现。
 
 ---
 
@@ -47,9 +60,9 @@
 
 | 论文 | 年份 | 领域 | 原文链接 | 优先级 | 备注 |
 |------|------|------|----------|--------|------|
-| — | — | — | — | — | — |
+| A modified multi-agent proximal policy optimization algorithm for multi-objective dynamic partial-re-entrant hybrid flow shop scheduling problem（MMAPPO） | 2025 | 调度优化 / 动态调度 / 深度强化学习 | [DOI](https://doi.org/10.1016/j.engappai.2024.109688) | 高 | 与 MOECLF 同作者（Wu & Liu），是 MOECLF 笔记中标记的下一篇 [58]；MMAPPO 用路由智能体 RA + 排序智能体 SA 双智能体 PPO，并以 Wasserstein 距离做自适应信赖域裁剪 |
 
-> 暂无计划中的论文。
+> **下一篇计划复现**：MMAPPO（MDPR-HFSP，部分重入混合流水车间动态调度）。文件夹建好后按约定补上 `MMAPPO/` 与其中的 README。
 
 ---
 
@@ -63,6 +76,10 @@ paper-reproductions/
 └── MOECLF/                # 每篇论文一个文件夹
     ├── README.md          # 论文信息、复现进度、如何运行
     ├── Code/              # 复现代码
+    │   ├── REPORT.md      # 完整复现报告
+    │   ├── *.py           # 算法、基线、指标、运行脚本
+    │   ├── EHFSP-HMC.json # 官方算例
+    │   └── results/       # 结果表（*.md 入库，缓存不入库）
     └── Notion/            # 精读笔记与插图
         ├── 阅读笔记.md
         └── DRL增强EA笔记/
@@ -71,13 +88,14 @@ paper-reproductions/
 ```
 
 文件夹命名规则：使用论文方法简称，不带空格；已建目录沿用原名（如 `MOECLF`）。
+上图中只列出已建目录；下一篇 `MMAPPO/` 开始复现后按同样结构补充。
 
 每个论文文件夹内约定：
 
 - `README.md`：论文信息、复现目标、运行方法、结果对比
-- `Code/`：复现代码
+- `Code/`：复现代码（含 `REPORT.md` 完整报告与 `results/` 结果表）
 - `Notion/`：精读笔记，插图统一放 `Notion/images/`
-- `data/`、`results/`：数据与实验输出，不入库（已在 `.gitignore` 中忽略）
+- `data/`、实验缓存：不入库（已在 `.gitignore` 中忽略）
 
 ---
 
@@ -90,17 +108,18 @@ paper-reproductions/
 git clone https://github.com/Melo502/paper-reproductions.git
 cd paper-reproductions
 
-# 2. 进入某篇论文的文件夹
-cd MOECLF
+# 2. 进入某篇论文的代码目录
+cd MOECLF/Code
 
 # 3. 安装依赖（建议使用虚拟环境）
 pip install -r requirements.txt
 
-# 4. 按该文件夹 README 里的命令运行
-python main.py
+# 4. 先跑冒烟测试，再按该文件夹 README 运行正式实验
+python run.py smoke
+python run_experiments.py
 ```
 
-> 当前 `MOECLF/` 仅有笔记与框架梳理，代码尚未提交，`requirements.txt` 与运行命令待补。
+> 各论文的入口脚本不同，以 `MOECLF/README.md` 的「运行命令」一节为准。
 
 ---
 
@@ -109,9 +128,10 @@ python main.py
 | 项目 | 配置 |
 |------|------|
 | 操作系统 | macOS 26.6.2（Apple Silicon, arm64） |
-| Python | 3.14.7 |
-| 深度学习框架 | 待定（复现代码确定后补充） |
-| GPU | 待补充 |
+| Python | 3.12.14 |
+| 深度学习框架 | PyTorch 2.14.0（CPU） |
+| 数值计算 | numpy 2.5.3、scipy 1.18.1 |
+| GPU | 无（实验在 CPU 上 14 进程并行完成） |
 
 > 不同论文的具体环境可能不同，以各文件夹内的说明为准。
 
@@ -161,7 +181,7 @@ python main.py
 ## 🙏 致谢
 
 - 感谢论文作者的工作与开源
-- 参考过的优秀项目：待补充
+- 各篇复现参考的开源项目或代码，会在对应文件夹的 README 中注明
 
 ---
 
