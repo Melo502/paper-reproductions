@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# 数据与实验输出（各子项目通用）
+data/
+results/
+outputs/
+logs/
+*.pkl
+*.pt
+*.pth
+*.h5
+*.npy
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
