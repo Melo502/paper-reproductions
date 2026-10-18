@@ -198,7 +198,6 @@ class MOECLF:
         self.update_epochs = update_epochs
         self.z_ = None  # 理想点（各目标历史最优）
         self.a_ = None  # 最坏点（各目标历史最差）
-        self.oracle_log = []  # 上限实验：每次决策可达的最佳 reward（用于判断有无提升空间）
 
     def run(self, train: bool = True) -> list[Solution]:
         """跑一个 episode（Ngen 代），返回非支配解集。"""
@@ -249,33 +248,6 @@ class MOECLF:
                 if new_sol is None:
                     new_sol = sol.copy()
                 new_sol.obj = decode(self.inst, new_sol)
-                self.z_ = np.minimum(self.z_, new_sol.obj)
-                self.a_ = np.maximum(self.a_, new_sol.obj)
-                offspring.append(new_sol)
-            elif idx in BI_set and self.controller == "oracle":
-                # 上限实验（Experiment A）：对边界个体枚举全部 LLH，取 reward 最大的动作。
-                # 相当于"完美选择器"——用来估计即便 PPO 每次都能选到最优 LLH，
-                # 性能上限还能提升多少。若 oracle 也追不上 Q-only，则 PPO 路线无空间。
-                best = None  # (reward, action, new_sol, new_sch)
-                # 交叉父代只选一次，避免 10 次候选评估把 rng 流推进 10 倍（公平性）
-                other_all = self._select_other(pop, ranks, fronts, idx, F1, BI)
-                for action in range(self.n_actions):
-                    other = other_all if action in (0, 2) else None
-                    cand = apply_llh(self.inst, sol, action + 1, self.rng, sch, other)
-                    if cand is None:
-                        continue
-                    cand_sch = decode_schedule(self.inst, cand)
-                    cand.obj = cand_sch.obj
-                    r = reward(sol.obj, cand.obj)
-                    if best is None or r > best[0]:
-                        best = (r, action, cand, cand_sch)
-                if best is None:
-                    new_sol = sol.copy()
-                    new_sol.obj = decode(self.inst, new_sol)
-                    self.oracle_log.append(0.0)
-                else:
-                    _r_best, _action, new_sol, _new_sch = best
-                    self.oracle_log.append(float(_r_best))
                 self.z_ = np.minimum(self.z_, new_sol.obj)
                 self.a_ = np.maximum(self.a_, new_sol.obj)
                 offspring.append(new_sol)

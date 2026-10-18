@@ -39,10 +39,11 @@
 
 | 论文 | 年份 | 领域 | 原文链接 | 官方代码 | 复现文件夹 | 结果（论文 / 复现） |
 |------|------|------|----------|----------|------------|---------------------|
-| Multi-objective evolutionary co-learning framework for energy-efficient hybrid flow-shop scheduling problem with human-machine collaboration（MOECLF） | 2025 | 调度优化 / 多目标进化 | [DOI](https://doi.org/10.1016/j.swevo.2025.101932) | 未找到，独立实现 | [MOECLF](./MOECLF) | 消融、控制器对比、算法对比已完成；**EP/MSI 与算法对比结论一致，VNS 与 PPO 未能复现** |
+| Multi-objective evolutionary co-learning framework for energy-efficient hybrid flow-shop scheduling problem with human-machine collaboration（MOECLF） | 2025 | 调度优化 / 多目标进化 | [DOI](https://doi.org/10.1016/j.swevo.2025.101932) | 未找到，独立实现 | [MOECLF](./MOECLF) | 消融、控制器对比、算法对比三组实验已完成；**框架优于 MODJA/NSGA-II 一致，EP 贡献最大一致；VNS 与 PPO 模块的增益未能复现** |
 
-> 说明：主算法与三组对照实验（`Np=200 / Ngen=1000`）已全部跑完，核心结论与论文部分一致、
-> 部分不符。差异分析与完整数据见 [MOECLF/Code/REPORT.md](./MOECLF/Code/REPORT.md)。
+> 说明：按论文的两阶段协议（训练阶段 → 测试阶段，`Np=200 / Ngen=1000`）跑完消融、
+> 控制器对比与算法对比三组实验，核心结论与论文部分一致、部分不符。
+> 差异分析与完整数据见 [MOECLF/Code/REPORT.md](./MOECLF/Code/REPORT.md)。
 
 ---
 
